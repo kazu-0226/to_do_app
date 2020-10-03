@@ -4,6 +4,17 @@
     :data= "toDos"
     style= "width: 100%">
     <el-table-column
+      prop="finished">
+      <!-- v-slotを設定し、それぞれの行のToDoのデータにアクセス -->
+      <template v-slot="scope">
+        <!-- v-modelディレクティブを使用し、ここにToDoのfinishedカラムを設定 -->
+        <!-- el-checkboxにchangeディレクティブを定義してチェックボックスが変更されると、updateToDoメソッドを呼び出す -->
+        <el-checkbox
+          v-model= "scope.row.finished"
+          @change= "updateToDo(scope.row.id, scope.row.finished)" ></el-checkbox>
+      </template>
+    </el-table-column>
+    <el-table-column
       prop= "title">
     </el-table-column>
     <el-table-column
@@ -55,7 +66,17 @@ import {reject} from 'lodash';
           this.toDos = reject(this.toDos, ['id', id]);
         }
       });
-  }
+  },
+  updateToDo(id, finished) {
+  // axiosのpatchメソッドを使用して、updateアクションにリクエスト
+  // チェックボックスが変更された時に受け取ったfinishedの情報を渡す
+  axios.patch('/api/v1/to_dos/' + id, {to_do: {finished: finished}})
+    .then(res => {
+      if (res.status === 200) {
+        console.log(res)
+      }
+  })
+}
 }
 }
 </script>
