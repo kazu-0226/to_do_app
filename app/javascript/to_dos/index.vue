@@ -1,4 +1,5 @@
 <template>
+  <!-- :data= "dataオプションで定義したtoDosオブジェクトでテーブルに表示する -->
   <el-table
     :data= "toDos"
     style= "width: 100%">
@@ -8,11 +9,26 @@
     <el-table-column
       prop= "expired_at">
     </el-table-column>
+    <el-table-column
+        width= "120">
+    <!-- templateタグでくくって、templateタグにv-slotを指定することで、それぞれのToDoにアクセス -->
+    <template v-slot="scope">
+    <!-- v-onディレクティブでクリックした時にdestroyToDoメソッドを実行 -->
+    <!-- scope.row.idでToDoのデータにアクセス -->
+    <el-button
+        @click= "destroyToDo(scope.row.id)"
+        type= "danger"
+        icon= "el-icon-delete"
+        circle></el-button>
+    </template>
+    </el-table-column>
   </el-table>
 </template>
 <script>
 // Vue.jsでAjaxを行うために、app/javascript/to_dos/index.vueでaxiosを利用する
 import axios from 'axios'
+// lodashのrejectメソッドを利用
+import {reject} from 'lodash';
   export default {
 // dataオプションでtoDosオブジェクトを定義しその値を空の配列に
   data() {
@@ -28,6 +44,18 @@ import axios from 'axios'
        .then(res => {
          this.toDos = res.data
        })
+  },
+  methods: {
+  destroyToDo(id) {
+    axios.delete('/api/v1/to_dos/' + id)
+      .then(res => {
+        // レスポンスのHTTPステータスコードが200だった場合
+        if (res.status === 200) {
+          //rejectメソッドを使用して、削除されたToDo以外のToDoを全て取得し、dataオプションのtoDos
+          this.toDos = reject(this.toDos, ['id', id]);
+        }
+      });
   }
+}
 }
 </script>
