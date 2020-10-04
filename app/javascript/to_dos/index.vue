@@ -1,4 +1,35 @@
 <template>
+  <div id="app">
+    <el-row>
+      <el-col :span="12" :offset="6">
+        <el-tabs v-model= "activeName">
+          <el-tab-pane label="ToDo" name="toDo">
+            <!-- to-do-tableコンポーネント -->
+            <!-- v-bindでto-dosという変数に割り当てて渡す -->
+            <!-- 受け取る側ではこれは自動的にキャメルケース（toDos） -->
+            <!-- @updateと@destroyでto-do-tableコンポーネントからindex.vueのメソッドを呼び出す -->
+            <to-do-table 
+              v-bind:to-dos= "filter(toDos, false)"
+              @update= "updateToDo"
+              @destroy= "destroyToDo">
+            </to-do-table>
+          </el-tab-pane>
+          <el-tab-pane label="終了したToDo" name="finishedToDo">
+          <!-- @updateと@destroyでto-do-tableコンポーネントからindex.vueのメソッドを呼び出す -->
+            <to-do-table 
+            v-bind:to-dos= "filter(toDos, true)"
+            @update= "updateToDo"
+            @destroy= "destroyToDo">
+            </to-do-table>
+          </el-tab-pane>
+        </el-tabs>
+     </el-col>
+    </el-row>
+  </div>
+</template>
+
+<style>/*
+<template>
 <el-tabs v-model= "activeName">
   <el-tab-pane label="ToDo" name="toDo">
   <!-- :data= "dataオプションで定義したtoDosオブジェクトでテーブルに表示する -->
@@ -75,9 +106,14 @@
   </el-tab-pane>
 </el-tabs>
 </template>
+*/</style>
+
+
 
 
 <script>
+// to-do-tableコンポーネントをインポート
+import ToDoTable from '../to_dos/to-do-table'
 // Vue.jsでAjaxを行うために、app/javascript/to_dos/index.vueでaxiosを利用する
 import axios from 'axios'
 // タスクの削除のため、lodashのrejectメソッドを利用
@@ -90,6 +126,10 @@ import {reject, filter} from 'lodash';
       toDos: []
     }
   },
+  // componentsオプションを設定
+  components: {
+      ToDoTable
+    },
   created() {
     // にcreatedフックを定義して、axiosを使ってGETリクエストを行う
     axios.get('/api/v1/to_dos')
