@@ -1,6 +1,10 @@
 <template>
   <div id="app">
     <el-row>
+       <el-button
+        icon= "el-icon-plus"
+        @click= "createToDoDialog=true"
+        circle></el-button>
       <el-col :span="12" :offset="6">
         <el-tabs v-model= "activeName">
           <el-tab-pane label="ToDo" name="toDo">
@@ -25,6 +29,12 @@
         </el-tabs>
      </el-col>
     </el-row>
+    <el-dialog
+    :visible.sync= "createToDoDialog"
+    width="30%"
+    center>
+    <to-do-form @close= "closeDialog"></to-do-form>
+  </el-dialog>
   </div>
 </template>
 
@@ -112,6 +122,7 @@
 
 
 <script>
+import ToDoForm from '../to_dos/to-do-form'
 // to-do-tableコンポーネントをインポート
 import ToDoTable from '../to_dos/to-do-table'
 // Vue.jsでAjaxを行うために、app/javascript/to_dos/index.vueでaxiosを利用する
@@ -123,12 +134,15 @@ import {reject, filter} from 'lodash';
 // dataオプションでtoDosオブジェクトを定義しその値を空の配列に
   data() {
     return {
-      toDos: []
+      toDos: [],
+      activeName: 'toDo',
+      createToDoDialog: false
     }
   },
   // componentsオプションを設定
   components: {
-      ToDoTable
+      ToDoTable,
+      ToDoForm
     },
   created() {
     // にcreatedフックを定義して、axiosを使ってGETリクエストを行う
@@ -163,7 +177,10 @@ import {reject, filter} from 'lodash';
   // filterメソッドを使って引数に与えられたToDoの一覧から、引数に与えられたfinishedの条件に合うToDoだけを返す
   filter(toDos, finished) {
   return filter(toDos, ['finished', finished])
-  }
+  },
+  closeDialog() {
+  this.createToDoDialog = false
+ }
  }
 }
 </script>
