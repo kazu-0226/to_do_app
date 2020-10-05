@@ -172,10 +172,10 @@ import {reject, filter} from 'lodash';
         }
       });
   },
-  updateToDo(id, finished) {
+  updateToDo(toDo) {
   // axiosのpatchメソッドを使用して、updateアクションにリクエスト
-  // チェックボックスが変更された時に受け取ったfinishedの情報を渡す
-  axios.patch('/api/v1/to_dos/' + id, {to_do: {finished: finished}})
+  // 変更された時に受け取ったto_doの情報を渡す
+  axios.patch('/api/v1/to_dos/' + toDo.id, {to_do: toDo})
     .then(res => {
       if (res.status === 200) {
         console.log(res)
