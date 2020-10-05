@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root 'to_dos#index'
-  resources :to_dos
   
   # デフォルトでjson形式のファイルを返す
   namespace :api, { format: 'json' } do
