@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <el-row>
+      <!-- クリックするとcreateToDoDialog=trueとなりダイアログが開く -->
        <el-button
         icon= "el-icon-plus"
         @click= "createToDoDialog=true"
@@ -29,11 +30,16 @@
         </el-tabs>
      </el-col>
     </el-row>
+    <!-- createToDoDialogがtrueのときにダイアログを表示し、falseのときにダイアログを非表示にする -->
     <el-dialog
     :visible.sync= "createToDoDialog"
     width="30%"
     center>
-    <to-do-form @close= "closeDialog"></to-do-form>
+    <!-- to-do-formコンポーネント -->
+    <!-- index.vueからto-do-form.vueにメソッドの処理を渡す -->
+    <to-do-form
+      @close= "closeDialog"
+      @add= "addToDo"></to-do-form>
   </el-dialog>
   </div>
 </template>
@@ -122,6 +128,7 @@
 
 
 <script>
+// to-do-formコンポーネントをインポート
 import ToDoForm from '../to_dos/to-do-form'
 // to-do-tableコンポーネントをインポート
 import ToDoTable from '../to_dos/to-do-table'
@@ -136,6 +143,7 @@ import {reject, filter} from 'lodash';
     return {
       toDos: [],
       activeName: 'toDo',
+      // ページ読み込み時はダイアログを非表示のため、
       createToDoDialog: false
     }
   },
@@ -178,8 +186,13 @@ import {reject, filter} from 'lodash';
   filter(toDos, finished) {
   return filter(toDos, ['finished', finished])
   },
+  // 登録ボタンが押された時にダイアログを閉じる
   closeDialog() {
   this.createToDoDialog = false
+ },
+//  toDosに作成されたToDoを追加する
+ addToDo(toDo) {
+  this.toDos.push(toDo)
  }
  }
 }

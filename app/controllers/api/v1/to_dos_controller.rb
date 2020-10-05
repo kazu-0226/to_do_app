@@ -9,9 +9,11 @@ class Api::V1::ToDosController < ActionController::API
     def create
         @to_do = ToDo.new(to_do_params)
         if @to_do.save
-          render status: :created
+        # HTTPステータスコードの201と作成されたToDoのJSONを返す
+            render status: :created
         else
-          render status: 400, json: { status: 400, message: 'ToDoの作成に失敗しました' }
+        # 失敗した場合は、HTTPステータスコードの400とメッセージを返す
+            render status: 400, json: { status: 400, message: 'ToDoの作成に失敗しました' }
         end
     end
 
