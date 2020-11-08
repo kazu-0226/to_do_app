@@ -1,4 +1,6 @@
 # README
+## 環境構築はWiki記載
+https://github.com/kazu-0226/to_do_app/wiki
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
